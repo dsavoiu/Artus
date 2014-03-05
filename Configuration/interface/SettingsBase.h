@@ -54,11 +54,11 @@ public:
 		return "SettingsBase - Pipeline name: " + GetName();
 	}
 
-	/// get list of all filters
-	VarCache<stringvector> m_filters;
-	stringvector GetFilters() const
+	/// get list of all pre-filters
+	VarCache<stringvector> m_preFilters;
+	stringvector GetPreFilters() const
 	{
-		RETURN_CACHED(m_filters, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".Filters"))
+		RETURN_CACHED(m_preFilters, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".PreFilters"))
 	}
 
 	/// get list of all local producers
@@ -66,6 +66,13 @@ public:
 	stringvector GetLocalProducers() const
 	{
 		RETURN_CACHED(m_localProducers, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".LocalProducers"))
+	}
+
+	/// get list of all filters
+	VarCache<stringvector> m_filters;
+	stringvector GetFilters() const
+	{
+		RETURN_CACHED(m_filters, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".Filters"))
 	}
 
 	/// get list of all consumers
@@ -91,7 +98,14 @@ public:
 	/// pointer to the global, loaded property tree
 	IMPL_PROPERTY(boost::property_tree::ptree*, PropTree)
 
-	/// get list of all local producers
+	/// get list of all pre-filters
+	/*VarCache<stringvector> m_preFilters;
+	stringvector GetPreFilters() const
+	{
+		RETURN_CACHED(m_preFilters, PropertyTreeSupport::GetAsStringList(GetPropTree(), "PreFilters"))
+	}*/
+
+	/// get list of all global producers
 	VarCache<stringvector> m_globalProducers;
 	stringvector GetGlobalProducers() const
 	{
