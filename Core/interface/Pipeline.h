@@ -105,6 +105,11 @@ public:
 		m_pipelineSettings = pset;
 		initializer.InitPipeline(this, pset);
 
+		// init Filters
+		for (auto & it : m_preFilter) {
+			it.Init(this);
+		}
+
 		// init local Producrs
 		/*for (auto & it : m_producer) {
 			it.InitLocal(this);
@@ -164,15 +169,24 @@ public:
 	        // Producers.
 		product_type localProduct ( globalProduct );
 
+		// run Filters
+		FilterResult fres;
+		for (FilterVectorIterator itfilter = m_preFilter.begin();
+				itfilter != m_preFilter.end(); itfilter++) {
+			fres.SetFilterDecisions(itfilter->GetFilterId(),
+					itfilter->DoesEventPass(evt, localProduct,
+							m_pipelineSettings));
+		}
+
 		// run local Producers
 		for (ProducerVectorIterator it = m_producer.begin();
 				it != m_producer.end(); it++) {
-			it->ProduceLocal(evt, localProduct,
-					m_pipelineSettings);
+			if (fres.HasPassed()) {
+				it->ProduceLocal(evt, localProduct, m_pipelineSettings);
+			}
 		}
 
 		// run Filters
-		FilterResult fres;
 		for (FilterVectorIterator itfilter = m_filter.begin();
 				itfilter != m_filter.end(); itfilter++) {
 			fres.SetFilterDecisions(itfilter->GetFilterId(),
@@ -191,6 +205,16 @@ public:
 		}
 	}
 
+	/// Find and return a Pre-Filter by it's id in this pipeline.
+	virtual FilterBase<TTypes>* FindPreFilter(std::string sFilterId) {
+		for (FilterVectorIterator it = m_preFilter.begin(); it != m_preFilter.end();
+				it++) {
+			if (it->GetFilterId() == sFilterId)
+				return &(*it);
+		}
+		return NULL;
+	}
+
 	/// Find and return a Filter by it's id in this pipeline.
 	virtual FilterBase<TTypes>* FindFilter(std::string sFilterId) {
 		for (FilterVectorIterator it = m_filter.begin(); it != m_filter.end();
@@ -204,6 +228,19 @@ public:
 	/// Return a reference to the settings used within this pipeline.
 	virtual setting_type const& GetSettings() const {
 		return m_pipelineSettings;
+	}
+
+	/// Add a new Pre-Filter to this Pipeline. The object will be freed in Pipelines destructor.
+	virtual void AddPreFilter(FilterForThisPipeline * pFilter) {
+		if (FindFilter(pFilter->GetFilterId()) != NULL)
+			throw std::exception();
+
+		m_preFilter.push_back(pFilter);
+	}
+
+	/// Add a new Producer to this Pipeline. The object will be freed in Pipelines destructor.
+	virtual void AddProducer(ProducerForThisPipeline * pProd) {
+		m_producer.push_back(pProd);
 	}
 
 	/// Add a new Filter to this Pipeline. The object will be freed in Pipelines destructor.
@@ -221,20 +258,16 @@ public:
 		//std::cout << "size = " << m_consumer.size() << std::endl;
 	}
 
-	/// Add a new Producer to this Pipeline. The object will be freed in Pipelines destructor.
-	virtual void AddProducer(ProducerForThisPipeline * pProd) {
-		m_producer.push_back(pProd);
-	}
-
 	/// Return a list of filters is this pipeline.
 	const FilterVector& GetFilters() {
 		return m_filter;
 	}
 
 private:
-	ConsumerVector m_consumer;
-	FilterVector m_filter;
+	FilterVector m_preFilter;
 	ProducerVector m_producer;
+	FilterVector m_filter;
+	ConsumerVector m_consumer;
 	setting_type m_pipelineSettings;
 };
 

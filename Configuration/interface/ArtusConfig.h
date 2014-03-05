@@ -120,6 +120,20 @@ private:
 
 			pipeline_type* pLine = new pipeline_type; //CreateDefaultPipeline();
 
+			// add pre-filter
+			stringvector localPreFilters = pset.GetPreFilters();
+			for ( stringvector::const_iterator it = localPreFilters.begin();
+				it != localPreFilters.end(); it ++ ) {
+					filter_base_type * pFilter = factory.createFilter ( *it );
+
+					if ( pFilter == ARTUS_CPP11_NULLPTR ){
+						std::cout << "Error: Filter with id " + (*it) + " not found" << std::endl;
+						exit(1);
+					} else {
+						pLine->AddPreFilter ( pFilter );
+					}
+				}
+
 			// add local producer
 			stringvector localProducers = pset.GetLocalProducers();
 			for ( stringvector::const_iterator it = localProducers.begin();
