@@ -26,7 +26,7 @@ public:
 	
 	HltFilter() : FilterBase<TTypes>() {};
 
-	virtual bool DoesEventPass(event_type const& event,
+	virtual bool DoesEventPassLocal(event_type const& event,
 			product_type const& product,
             setting_type const& settings) const ARTUS_CPP11_OVERRIDE
 	{
