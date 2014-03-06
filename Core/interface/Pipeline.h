@@ -163,17 +163,19 @@ public:
 	/// Run the pipeline with one specific event as input. GlobalProduct are products which are 
 	/// common for all pipelines and have therefore been created only once.
 	virtual void RunEvent(event_type const& evt,
-			product_type const& globalProduct) {
+	                      product_type const& globalProduct,
+	                      FilterResult const& globalFilterResult)
+	{
 
         // make a local copy of the global product and allow this one to be modified by local 
         // Producers.
 		product_type localProduct ( globalProduct );
+		FilterResult localFilterResult ( globalFilterResult );
 
 		// run Filters
-		FilterResult fres;
 		for (FilterVectorIterator itfilter = m_preFilter.begin();
 				itfilter != m_preFilter.end(); itfilter++) {
-			fres.SetFilterDecisions(itfilter->GetFilterId(),
+			localFilterResult.SetFilterDecisions(itfilter->GetFilterId(),
 					itfilter->DoesEventPass(evt, localProduct,
 							m_pipelineSettings));
 		}
@@ -181,7 +183,7 @@ public:
 		// run local Producers
 		for (ProducerVectorIterator it = m_producer.begin();
 				it != m_producer.end(); it++) {
-			if (fres.HasPassed()) {
+			if (localFilterResult.HasPassed()) {
 				it->ProduceLocal(evt, localProduct, m_pipelineSettings);
 			}
 		}
@@ -189,12 +191,12 @@ public:
 		// run Filters
 		for (FilterVectorIterator itfilter = m_filter.begin();
 				itfilter != m_filter.end(); itfilter++) {
-			fres.SetFilterDecisions(itfilter->GetFilterId(),
+			localFilterResult.SetFilterDecisions(itfilter->GetFilterId(),
 					itfilter->DoesEventPassLocal(evt, localProduct,
 							m_pipelineSettings));
 			
 			// TODO: delete
-			fres.SetFilterDecisions(itfilter->GetFilterId(),
+			localFilterResult.SetFilterDecisions(itfilter->GetFilterId(),
 					itfilter->DoesEventPass(evt, localProduct,
 							m_pipelineSettings));
 		}
@@ -202,11 +204,11 @@ public:
 		// run Consumers
 		for (ConsumerVectorIterator itcons = m_consumer.begin();
 				itcons != m_consumer.end(); itcons++) {
-			if (fres.HasPassed()) {
+			if (localFilterResult.HasPassed()) {
 				itcons->ProcessFilteredEvent(evt, localProduct);
 			}
 
-			itcons->ProcessEvent(evt, localProduct, fres);
+			itcons->ProcessEvent(evt, localProduct, localFilterResult);
 		}
 	}
 

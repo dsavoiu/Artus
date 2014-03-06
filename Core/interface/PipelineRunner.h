@@ -119,14 +119,15 @@ public:
 				break;
 
 			product_type productGlobal;
+			FilterResult globalFilterResult;
 
 			// call global pre-filters
 			for (FiltersIterator it = m_globalPreFilters.begin();
 					it != m_globalPreFilters.end(); it++) {
 				
-				// TODO: handle return value
-				it->DoesEventPassGlobal(evtProvider.GetCurrentEvent(),
-						productGlobal, globalSettings);
+				globalFilterResult.SetFilterDecisions(it->GetFilterId(),
+						it->DoesEventPassGlobal(evtProvider.GetCurrentEvent(),
+								productGlobal, globalSettings));
 			}
 
 			// call global products
@@ -145,7 +146,7 @@ public:
 						it != m_pipelines.end(); it++) {
 					if (it->GetSettings().GetLevel() == 1)
 						it->RunEvent(evtProvider.GetCurrentEvent(),
-								productGlobal);
+								productGlobal, globalFilterResult);
 				}
 			}
 		}
