@@ -95,7 +95,6 @@ public:
 		 if (firstEvent != 0 || nEvents != evtProvider.GetEntries())
 		 LOG(red << "Warning: Custom range of events: " << firstEvent << " to " << nEvents << reset)
 		 */
-		bool bEventValid = true;
 
 		// init global pre-filters
 		for (FiltersIterator it = m_globalPreFilters.begin();
@@ -133,21 +132,16 @@ public:
 			// call global products
 			for (ProducerIterator it = m_globalProducer.begin();
 					it != m_globalProducer.end(); it++) {
-				bEventValid = it->ProduceGlobal(evtProvider.GetCurrentEvent(),
+				it->ProduceGlobal(evtProvider.GetCurrentEvent(),
 						productGlobal, globalSettings);
-				//LOG(it->GetContent())
-				if (!bEventValid)
-					break;
 			}
 
-			// run the pipelines, if the event is valid
-			if (bEventValid) {
-				for (PipelinesIterator it = m_pipelines.begin();
-						it != m_pipelines.end(); it++) {
-					if (it->GetSettings().GetLevel() == 1)
-						it->RunEvent(evtProvider.GetCurrentEvent(),
-								productGlobal, globalFilterResult);
-				}
+			// run the pipelines
+			for (PipelinesIterator it = m_pipelines.begin();
+					it != m_pipelines.end(); it++) {
+				if (it->GetSettings().GetLevel() == 1)
+					it->RunEvent(evtProvider.GetCurrentEvent(),
+							productGlobal, globalFilterResult);
 			}
 		}
 
