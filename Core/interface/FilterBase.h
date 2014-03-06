@@ -35,10 +35,6 @@ public:
 	virtual void InitLocal(setting_type const& pipelineSettings) {
 	}
 
-	// TODO: delete
-	virtual void Init(Pipeline<TTypes> * pset) {
-	}
-
 	virtual void Finish() {
 	}
 
@@ -60,10 +56,6 @@ public:
 	{
 		return true;
 	}
-
-	// TODO: delete
-	virtual bool DoesEventPass(event_type const& event,
-			product_type const& product, setting_type const& settings) const = 0;
 
 	virtual std::string ToString(bool bVerbose = false) {
 		return GetFilterId();

@@ -107,7 +107,7 @@ public:
 
 		// init Filters
 		for (auto & it : m_preFilter) {
-			it.Init(this);
+			it.InitLocal(pset);
 		}
 
 		// init local Producrs
@@ -117,7 +117,7 @@ public:
 
 		// init Filters
 		for (auto & it : m_filter) {
-			it.Init(this);
+			it.InitLocal(pset);
 		}
 
 		// init Consumers
@@ -172,11 +172,11 @@ public:
 		product_type localProduct ( globalProduct );
 		FilterResult localFilterResult ( globalFilterResult );
 
-		// run Filters
+		// run Pre-Filters
 		for (FilterVectorIterator itfilter = m_preFilter.begin();
 				itfilter != m_preFilter.end(); itfilter++) {
 			localFilterResult.SetFilterDecisions(itfilter->GetFilterId(),
-					itfilter->DoesEventPass(evt, localProduct,
+					itfilter->DoesEventPassLocal(evt, localProduct,
 							m_pipelineSettings));
 		}
 
@@ -193,11 +193,6 @@ public:
 				itfilter != m_filter.end(); itfilter++) {
 			localFilterResult.SetFilterDecisions(itfilter->GetFilterId(),
 					itfilter->DoesEventPassLocal(evt, localProduct,
-							m_pipelineSettings));
-			
-			// TODO: delete
-			localFilterResult.SetFilterDecisions(itfilter->GetFilterId(),
-					itfilter->DoesEventPass(evt, localProduct,
 							m_pipelineSettings));
 		}
 

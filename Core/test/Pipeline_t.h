@@ -26,7 +26,7 @@ public:
 		return "testfilter";
 	}
 
-	virtual bool DoesEventPass(const TestEvent & event,
+	virtual bool DoesEventPassLocal(const TestEvent & event,
 			TestProduct const& product, TestSettings const& settings) const {
 		return (event.iVal < 2);
 	}
@@ -39,7 +39,7 @@ public:
 		return "testfilter2";
 	}
 
-	virtual bool DoesEventPass(const TestEvent & event,
+	virtual bool DoesEventPassLocal(const TestEvent & event,
 			TestProduct const& product, TestSettings const& settings) const {
 		return false;
 	}
