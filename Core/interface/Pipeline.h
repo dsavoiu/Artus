@@ -111,9 +111,9 @@ public:
 		}
 
 		// init local Producrs
-		/*for (auto & it : m_producer) {
+		for (auto & it : m_producer) {
 			it.InitLocal(this);
-		}*/
+		}
 
 		// init Filters
 		for (auto & it : m_filter) {
