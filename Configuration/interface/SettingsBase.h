@@ -99,10 +99,10 @@ public:
 	IMPL_PROPERTY(boost::property_tree::ptree*, PropTree)
 
 	/// get list of all pre-filters
-	VarCache<stringvector> m_preFilters;
-	stringvector GetPreFilters() const
+	VarCache<stringvector> m_globalPreFilters;
+	stringvector GetClobalPreFilters() const
 	{
-		RETURN_CACHED(m_preFilters, PropertyTreeSupport::GetAsStringList(GetPropTree(), "PreFilters"))
+		RETURN_CACHED(m_globalPreFilters, PropertyTreeSupport::GetAsStringList(GetPropTree(), "GlobalPreFilters"))
 	}
 
 	/// get list of all global producers

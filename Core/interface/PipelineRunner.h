@@ -50,8 +50,8 @@ public:
 	typedef boost::ptr_list<TPipeline> Pipelines;
 	typedef typename Pipelines::iterator PipelinesIterator;
 
-	typedef boost::ptr_list< filter_base_type > Filter;
-	typedef typename Filter::iterator FilterIterator;
+	typedef boost::ptr_list< filter_base_type > Filters;
+	typedef typename Filters::iterator FiltersIterator;
 
 	typedef boost::ptr_list< producer_base_type > Producer;
 	typedef typename Producer::iterator ProducerIterator;
@@ -98,7 +98,7 @@ public:
 		bool bEventValid = true;
 
 		// init global pre-filters
-		for (FilterIterator it = m_globalPreFilters.begin();
+		for (FiltersIterator it = m_globalPreFilters.begin();
 				it != m_globalPreFilters.end(); it++) {
 			it->InitGlobal(globalSettings);
 		}
@@ -121,7 +121,7 @@ public:
 			product_type productGlobal;
 
 			// call global pre-filters
-			for (FilterIterator it = m_globalPreFilters.begin();
+			for (FiltersIterator it = m_globalPreFilters.begin();
 					it != m_globalPreFilters.end(); it++) {
 				
 				// TODO: handle return value
@@ -191,7 +191,7 @@ public:
 private:
 
 	Pipelines m_pipelines;
-	Producer m_globalPreFilters;
+	Filters m_globalPreFilters;
 	Producer m_globalProducer;
 	ProgressReportList m_progressReport;
 };

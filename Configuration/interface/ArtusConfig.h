@@ -36,6 +36,7 @@ public:
 	{
 		typedef typename TPipelineRunner::global_setting_type global_setting_type;
 
+		LoadGlobalPreFilters <TPipelineRunner,TFactory, global_setting_type > (runner, factory);
 		LoadGlobalProducer <TPipelineRunner,TFactory, global_setting_type > (runner, factory);
 		LoadPipelines< TPipelineInitializer, TPipelineRunner>(pInit, runner, factory, outputFile);
 	}
@@ -59,6 +60,29 @@ public:
 
 
 private:
+
+	// load the global prefilters list from configuration and
+	// use the factory object to add these filters to the pipeline runner
+	// don't use directly but call LoadConfiguration
+	template<class TPipelineRunner, class TFactory, class TGlobalSettings>
+	void LoadGlobalPreFilters( TPipelineRunner& runner, TFactory & factory ) {
+
+		typedef typename TPipelineRunner::filter_base_type filter_base_type;
+
+		TGlobalSettings gSettings = GetGlobalSettings< TGlobalSettings >();
+		stringvector globalPreFilters = gSettings.GetClobalPreFilters();
+		for ( stringvector::const_iterator it = globalPreFilters.begin();
+			it != globalPreFilters.end(); it ++ ) {
+			filter_base_type * gPreFilter = factory.createFilter ( *it );
+
+			if ( gPreFilter == ARTUS_CPP11_NULLPTR ){
+				std::cout << "Error: Global pre-filter with id " + (*it) + " not found" << std::endl;
+				exit(1);
+			} else {
+				runner.AddGlobalPreFilter( gPreFilter );
+			}
+		}
+	}
 
 	// load the global produce list from configuration and
 	// use the factory object to add these producers to the pipeline runner
