@@ -165,8 +165,8 @@ public:
 	virtual void RunEvent(event_type const& evt,
 			product_type const& globalProduct) {
 
-	        // make a local copy of the global product and allow this one to be modified by local 
-	        // Producers.
+        // make a local copy of the global product and allow this one to be modified by local 
+        // Producers.
 		product_type localProduct ( globalProduct );
 
 		// run Filters
