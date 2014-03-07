@@ -20,11 +20,10 @@ public:
 		return "test_global_producer";
 	}
 	
-	virtual bool ProduceGlobal(TestEvent const& event,
+	virtual void ProduceGlobal(TestEvent const& event,
 			TestProduct & product,
 			TestGlobalSettings const& globalSettings) const ARTUS_CPP11_OVERRIDE {
 		product.iGlobalProduct = event.iVal + 5 + globalSettings.GetOffset();
-		return true;
 	}
 	
 	// empty to serve as a global producer only

@@ -18,7 +18,7 @@ public:
 		return "pt_correction";
 	}
 
-	virtual ProduceGlobal(TraxEvent const& event,
+	virtual void ProduceGlobal(TraxEvent const& event,
 			TraxProduct & product,
 			TraxGlobalSettings const& globalSettings) const
 					ARTUS_CPP11_OVERRIDE {
