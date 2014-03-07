@@ -11,6 +11,9 @@
 #include <map>
 #include <sstream>
 
+#include "Artus/Core/interface/GlobalInclude.h"
+
+
 // forward define to be able to use the event pipeline here
 template<class TTypes>
 class Pipeline;
@@ -48,6 +51,7 @@ public:
 			product_type const& product, global_setting_type const& globalSettings) const
 	{
 		LOG_FATAL("DoesEventPassGlobal for filter " << this->GetFilterId() << " is not implemented");
+		return false;
 	}
 
 	// process local event
@@ -55,6 +59,7 @@ public:
 			product_type const& product, setting_type const& settings) const
 	{
 		LOG_FATAL("DoesEventPassLocal for filter " << this->GetFilterId() << " is not implemented");
+		return false;
 	}
 
 	virtual std::string ToString(bool bVerbose = false) {
