@@ -5,44 +5,23 @@
 #include "Artus/Configuration/interface/SettingMacros.h"
 #include "Artus/Configuration/interface/PropertyTreeSupport.h"
 
-/**
-   \brief Reads settings for local parts of KappaPipelineRunner from a prepared json configuration 
-   file. 
 
-   Defines local settings that can be obtained from the json configuration file. These settings are
-   then available as key value pairs of type:
-
-   KappaGlobalSetting mysetting;
-   mysetting.key = value
-
-   for an implementation of type:
-
-   IMPL_SETTING_DEFAULT(type_of_value, key, default_value);
-
-   You can define the readout of new global settings here or in a derived class.
-*/
-
-class KappaPipelineSettings: public SettingsBase {
+template < class TBaseClass >
+class KappaSharedSettings: {
 public:
-
-	VarCache<stringvector> quantities;
-	stringvector GetQuantities() const
-	{
-		RETURN_CACHED(quantities, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".Quantities"))
-	}
 
 	VarCache<std::vector<std::string>> jsonFiles;
 	stringvector GetJsonFiles() const
 	{
-		RETURN_CACHED(jsonFiles, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + "JsonFiles"))
+		RETURN_CACHED(jsonFiles, PropertyTreeSupport::GetAsStringList(GetPropTree(), "JsonFiles"))
 	}
-	IMPL_SETTING_DEFAULT(int, PassRunLow, 1);
+	IMPL_SETTING_DEFAULT(int, PassRunLow, 0);
 	IMPL_SETTING_DEFAULT(int, PassRunHigh, 0);
 	
 	VarCache<std::vector<std::string>> hltPaths;
 	stringvector GetHltPaths() const
 	{
-		RETURN_CACHED(hltPaths, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".HltPaths"))
+		RETURN_CACHED(hltPaths, PropertyTreeSupport::GetAsStringList(GetPropTree(), "HltPaths"))
 	}
 	IMPL_SETTING_DEFAULT(bool, AllowPrescaledTrigger, true);
 	
@@ -63,8 +42,34 @@ public:
 
 	IMPL_SETTING(std::string, JetID);
 
-	IMPL_SETTING(std::string, PileupWeightFile);
 
+};
+
+/**
+   \brief Reads settings for local parts of KappaPipelineRunner from a prepared json configuration 
+   file. 
+
+   Defines local settings that can be obtained from the json configuration file. These settings are
+   then available as key value pairs of type:
+
+   KappaGlobalSetting mysetting;
+   mysetting.key = value
+
+   for an implementation of type:
+
+   IMPL_SETTING_DEFAULT(type_of_value, key, default_value);
+
+   You can define the readout of new global settings here or in a derived class.
+*/
+
+class KappaPipelineSettings: public KappaSharedSettings<SettingsBase>, public SettingsBase {
+public:
+
+	VarCache<stringvector> quantities;
+	stringvector GetQuantities() const
+	{
+		RETURN_CACHED(quantities, PropertyTreeSupport::GetAsStringList(GetPropTree(), "Pipelines." + GetName() + ".Quantities"))
+	}
 };
 
 /**
@@ -84,7 +89,7 @@ public:
    You can define the readout of new global settings here or in a derived class.
 */
 
-class KappaGlobalSettings: public GlobalSettingsBase {
+class KappaGlobalSettings: public KappaSharedSettings<GlobalSettingsBase>, public GlobalSettingsBase {
 
 public:
 
@@ -146,21 +151,6 @@ public:
 	/// name of TaggerMetaData in kappa tuple
 	IMPL_SETTING_DEFAULT(std::string, TaggerMetadata, ""); // TODO: Default value, move to Artus/Provider
 	IMPL_SETTING_DEFAULT(std::string, TriggerObjects, "")
-
-	VarCache<std::vector<std::string>> jsonFiles;
-	stringvector GetJsonFiles() const
-	{
-		RETURN_CACHED(jsonFiles, PropertyTreeSupport::GetAsStringList(GetPropTree(), "JsonFiles"))
-	}
-	IMPL_SETTING_DEFAULT(int, PassRunLow, 0);
-	IMPL_SETTING_DEFAULT(int, PassRunHigh, 0);
-	
-	VarCache<std::vector<std::string>> hltPaths;
-	stringvector GetHltPaths() const
-	{
-		RETURN_CACHED(hltPaths, PropertyTreeSupport::GetAsStringList(GetPropTree(), "HltPaths"))
-	}
-	IMPL_SETTING_DEFAULT(bool, AllowPrescaledTrigger, true);
 	
 	//Reading Boson PdgId for GenTauDecayProducer studies.
 	VarCache<stringvector> BosonPdgId;
@@ -168,24 +158,4 @@ public:
 	{
 		RETURN_CACHED(BosonPdgId, PropertyTreeSupport::GetAsStringList(GetPropTree(), "BosonPdgId"))
 	}
-	
-	IMPL_SETTING(int, Year);
-	
-	IMPL_SETTING(std::string, MuonID);
-	IMPL_SETTING(std::string, MuonIsoType);
-	IMPL_SETTING(std::string, MuonIso);
-	
-	IMPL_SETTING(std::string, ElectronID);
-	IMPL_SETTING(std::string, ElectronIsoType);
-	
-	VarCache<std::vector<std::string>> tauDiscriminators;
-	stringvector GetTauDiscriminators() const
-	{
-		RETURN_CACHED(tauDiscriminators, PropertyTreeSupport::GetAsStringList(GetPropTree(), "TauDiscriminators"))
-	}
-
-	IMPL_SETTING(std::string, JetID);
-
-	IMPL_SETTING(std::string, PileupWeightFile);
-
 };
