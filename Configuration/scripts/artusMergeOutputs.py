@@ -12,7 +12,7 @@ import os
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
-import Artus.Utility.progressiterator as pi
+import ArtusTools.Tools.progressiterator as pi
 
 
 def main():
