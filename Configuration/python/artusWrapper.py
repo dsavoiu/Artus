@@ -16,7 +16,7 @@ import re
 from string import Template
 from datetime import datetime
 
-import Artus.Utility.tools as tools
+import ArtusTools.Tools.tools as tools
 import ArtusTools.Tools.jsonTools as jsonTools
 
 

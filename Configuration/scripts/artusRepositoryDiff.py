@@ -10,7 +10,7 @@ import os
 import shlex
 
 import ArtusTools.Tools.jsonTools as jsonTools
-import Artus.Utility.tools as tools
+import ArtusTools.Tools.tools as tools
 
 
 def main():
