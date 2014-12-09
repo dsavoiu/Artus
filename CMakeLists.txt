@@ -11,6 +11,8 @@ include(FindROOT.cmake)
 # commented for now, if you will need this type of compile environment ( afs-machine + cmake compile )
 # please take care of making this check safe also on non-afs systems
 
+#BOOST_ROOT 
+
 if (DEFINED ENV{CMSSW_RELEASE_BASE} )
 	execute_process(COMMAND ls $ENV{CMSSW_RELEASE_BASE}/../../../../$ENV{SCRAM_ARCH}/external/boost COMMAND tail -n 1 COMMAND tr -d '\n' OUTPUT_VARIABLE BOOSTVER)
 	set(BOOST_INCLUDE_DIR "/afs/cern.ch/cms/$ENV{SCRAM_ARCH}/external/boost/${BOOSTVER}/include/")
@@ -18,8 +20,8 @@ if (DEFINED ENV{CMSSW_RELEASE_BASE} )
 	message("Looking for boost in CMSSW ... - found ${BOOST_INCLUDE_DIR}")
 	message("Looking for boost in CMSSW ... - found ${BOOST_LIB_DIR}")
 else()
-	set(BOOST_INCLUDE_DIR "")
-	set(BOOST_LIB_DIR "")
+    find_package( Boost REQUIRED COMPONENTS program_options )
+    message ( "here: ${Boost_LIBRARY_DIR} and ${Boost_FOUND}" )
 	message("Expecting boost to be provided by system")
 endif()
 
@@ -46,7 +48,7 @@ add_library(artus_configuration SHARED
 )
 
 target_link_libraries( artus_configuration 	
-	-L${BOOST_LIB_DIR}
+	${Boost_LIBRARIES}
         boost_program_options)
 
 add_library(artus_consumer SHARED
