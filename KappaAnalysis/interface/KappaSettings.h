@@ -32,6 +32,9 @@ public:
 	IMPL_SETTING_DEFAULT(std::string, GenTaus, "");
 	IMPL_SETTING_DEFAULT(std::string, GenTauJets, "");
 
+	/// name of lepton pairs collection in kappa tuple
+	IMPL_SETTING_DEFAULT(std::string, LeptonPairs, "");
+
 	/// name of jet collection in kappa tuple
 	IMPL_SETTING_DEFAULT(std::string, BasicJets, "");
 	IMPL_SETTING_DEFAULT(std::string, GenJets, "");

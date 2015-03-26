@@ -34,6 +34,9 @@ public:
 	KGenTaus* m_genTaus = 0;
 	KGenJets* m_genTauJets = 0;
 
+	/// pointer to lepton pairs collection
+	KLeptonPairs* m_leptonPairs = 0;
+
 	/// pointer to jet collection
 	KBasicJets* m_basicJets = 0;
 	KLVs* m_genJets = 0;
