@@ -73,7 +73,7 @@ void GenTauDecayModeProducer::Produce(KappaEvent const& event, KappaProduct& pro
 	}
 
 	product.m_tau1DecayMode = tau1DecayMode;
-	product.m_tau2DecayMode = tau2DecayMode;	
+	product.m_tau2DecayMode = tau2DecayMode;
 
 	product.m_tau1ProngSize = tau1ProngSize;
 	product.m_tau2ProngSize = tau2ProngSize;
